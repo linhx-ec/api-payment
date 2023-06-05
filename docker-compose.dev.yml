@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  product:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3002:3002
+    volumes:
+      - .:/app
+    environment:
+      MONGO_DB_URL: mongodb://root:root@mongo:27017
+      MONGO_DB_NAME: payment
+      MONGO_DB_REPLICA: rs0
+    networks:
+      - network
+
+networks:
+  network:
+    name: ec_network
+    external: true
