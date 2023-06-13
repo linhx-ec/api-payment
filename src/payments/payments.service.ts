@@ -5,6 +5,8 @@ import {
 } from './payment.repository';
 import { Service, Transactional } from '@linhx/nest-repo';
 import { OUTBOX_PROVIDER, OutBoxService } from '../outbox/outbox.service';
+import { Payment } from './entities/payment.entity';
+import { payment as PAYMENT_TYPES } from '@linhx-ec/shared-types';
 
 @Service()
 @Transactional()
@@ -26,10 +28,15 @@ export class PaymentsService {
     currency: string;
     orderId: string;
   }) {
-    // TODO pay
+    console.log('value', value)
+    let payment = new Payment();
+    payment.amount = value;
+    payment.currency = currency;
+    payment = await this.paymentRepository.create(payment);
+
     await this.outboxService.save({
-      topic: 'PAYMENT_PAID',
-      message: { status: 'successful', orderId },
+      topic: PAYMENT_TYPES.eventsName.PAYMENT_PAID,
+      message: { status: 'successful', orderId, id: payment.id },
     });
   }
 }

@@ -1,7 +1,12 @@
-import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class Payment {
+  @Prop({ required: true })
+  amount: number;
+  @Prop({ required: true })
+  currency: string;
+
   get id() {
     return (this as any)._id.toString();
   }
